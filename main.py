@@ -310,7 +310,7 @@ def ongoing_session(graphics_data: tuple) -> bool:
 
 def lap_finished(graphics_data: tuple) -> bool:
     current_lap = graphics_data[7]
-    if graphics_data[7] == current_lap:
+    if graphics_data[7] != current_lap:
         return True
     else:
         current_lap += 1
@@ -330,22 +330,28 @@ def main():
 
         while ongoing_session(graphics_data):
 
-            session_details = str(static_data[5])
-            carModel = str(static_data[4])
-            lap_number = graphics_data[7]
-            lap = Laps(session_details, lap_number, carModel)
+            print(physics_data)
+            print(graphics_data)
+            # session_details = str(static_data[5])
+            # carModel = str(static_data[4])
+            # lap_number = graphics_data[7]
+            # lap = Laps(session_details, lap_number, carModel)
 
             """This can be made into a function that collects data for that lap"""
-            while not lap_finished(graphics_data):
-                #lap_time = graphics_data[3]
-                #lap.current_lap_time.append(lap_time)
-                print("Lap is not yet finished.")
-            else:
-                print("Lap has finished.")
-                break
-                #with open(f'{session_details}{lap_number}.json', 'w') as json_file:
-                    #json.dump(lap, json_file, indent=4)
-                #continue
+            # while not lap_finished(graphics_data):
+            #
+            #     #lap_time = graphics_data[3]
+            #     #lap.current_lap_time.append(lap_time)
+            #     print("Lap is not yet finished.")
+            #     print(graphics_data[7])
+            # else:
+            #
+            #     print("Lap has finished.")
+            #     print(graphics_data[4])
+            #     break
+            #     #with open(f'{session_details}{lap_number}.json', 'w') as json_file:
+            #         #json.dump(lap, json_file, indent=4)
+            #     #continue
         else:
             continue
     else:
