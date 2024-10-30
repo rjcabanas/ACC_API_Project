@@ -323,29 +323,12 @@ def main():
         physics_shared_mem = get_physics_shared_mem()
         graphics_shared_mem = get_graphics_shared_mem()
         static_shared_mem = get_static_shared_mem()
-
-        physics_data = get_physics_data(physics_shared_mem)
         graphics_data = get_graphics_data(graphics_shared_mem)
-        static_data = get_static_data(static_shared_mem)
 
         while ongoing_session(graphics_data):
-
-            session_details = str(static_data[5])
-            carModel = str(static_data[4])
-            lap_number = graphics_data[7]
-            lap = Laps(session_details, lap_number, carModel)
-
-            """This can be made into a function that collects data for that lap"""
-            while not lap_finished(graphics_data):
-                #lap_time = graphics_data[3]
-                #lap.current_lap_time.append(lap_time)
-                print("Lap is not yet finished.")
-            else:
-                print("Lap has finished.")
-                break
-                #with open(f'{session_details}{lap_number}.json', 'w') as json_file:
-                    #json.dump(lap, json_file, indent=4)
-                #continue
+            all_data = [list(get_physics_data(physics_shared_mem)), list(get_graphics_data(graphics_shared_mem)), list(get_static_data(static_shared_mem))]
+            with open("data.json", "w") as json_file:
+                json.dump(all_data, json_file, indent=4)
         else:
             continue
     else:
