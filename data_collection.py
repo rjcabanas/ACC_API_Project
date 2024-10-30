@@ -4,8 +4,9 @@ import struct
 import psutil
 from lap_class import Laps
 import json
+import pickle
 
-buffer_size_physics = 724
+buffer_size_physics = 704
 buffer_size_graphics = 944
 buffer_size_static = 820
 
@@ -109,15 +110,14 @@ def get_physics_data(shared_memory) -> tuple:
                             'f' +                     # kerbVibration
                             'f' +                     # slipVibrations
                             'f' +                     # gVibrations
-                            'f' +                     # absVibrations
-                            '20s'                     # reserved[20] (20 bytes for wchar_t)
+                            'f'                      # absVibrations
                         )
     physics_unpacked_data = struct.unpack(data_format_string, physics_data)
 
     return physics_unpacked_data
 
 
-def get_graphics_shared_mem(buffer_size=944, game_API="acpmf_graphics"):
+def get_graphics_shared_mem(buffer_size=buffer_size_graphics, game_API="acpmf_graphics"):
     graphics_shared_mem = mmap.mmap(-1, length=buffer_size, access=mmap.ACCESS_READ, offset=0,
                                     tagname=game_API)
 
@@ -130,14 +130,14 @@ def get_graphics_shared_mem(buffer_size=944, game_API="acpmf_graphics"):
 def get_graphics_data(shared_memory) -> tuple:
     graphics_data = shared_memory.read(buffer_size_graphics)
     data_format_string = (
-                    'I'               # packetId
+                    'i'               # packetId
                     'I'               # status (assuming it's an int; adjust as needed)
                     'I'               # session (assuming it's an int; adjust as needed)
                     '15s'             # currentTime
                     '15s'             # lastTime
                     '15s'             # bestTime
                     '15s'             # split
-                    'I'               # completedLaps
+                    'i'               # completedLaps
                     'I'               # position
                     'I'               # iCurrentTime
                     'I'               # iLastTime
@@ -221,7 +221,7 @@ def get_graphics_data(shared_memory) -> tuple:
     return graphics_unpacked_data
 
 
-def get_static_shared_mem(buffer_size=820, game_API="acpmf_static"):
+def get_static_shared_mem(buffer_size=buffer_size_static, game_API="acpmf_static"):
     static_shared_mem = mmap.mmap(-1, length=buffer_size, access=mmap.ACCESS_READ, offset=0,
                                   tagname=game_API)
 
@@ -310,7 +310,7 @@ def ongoing_session(graphics_data: tuple) -> bool:
 
 def lap_finished(graphics_data: tuple) -> bool:
     current_lap = graphics_data[7]
-    if graphics_data[7] != current_lap:
+    if graphics_data[7] == current_lap:
         return True
     else:
         current_lap += 1
@@ -318,42 +318,37 @@ def lap_finished(graphics_data: tuple) -> bool:
 
 
 def main():
+    driving_data = []
 
     while game_is_running():
         physics_shared_mem = get_physics_shared_mem()
         graphics_shared_mem = get_graphics_shared_mem()
         static_shared_mem = get_static_shared_mem()
 
-        physics_data = get_physics_data(physics_shared_mem)
         graphics_data = get_graphics_data(graphics_shared_mem)
+        physics_data = get_physics_data(physics_shared_mem)
         static_data = get_static_data(static_shared_mem)
 
-        while ongoing_session(graphics_data):
-
-            print(physics_data)
-            print(graphics_data)
-            # session_details = str(static_data[5])
-            # carModel = str(static_data[4])
-            # lap_number = graphics_data[7]
-            # lap = Laps(session_details, lap_number, carModel)
-
-            """This can be made into a function that collects data for that lap"""
-            # while not lap_finished(graphics_data):
-            #
-            #     #lap_time = graphics_data[3]
-            #     #lap.current_lap_time.append(lap_time)
-            #     print("Lap is not yet finished.")
-            #     print(graphics_data[7])
-            # else:
-            #
-            #     print("Lap has finished.")
-            #     print(graphics_data[4])
-            #     break
-            #     #with open(f'{session_details}{lap_number}.json', 'w') as json_file:
-            #         #json.dump(lap, json_file, indent=4)
-            #     #continue
-        else:
+        if ongoing_session(graphics_data):
+            '''Can convert this section into a function for collecting data'''
+            gas = physics_data[1]
+            brake = physics_data[2]
+            fuel = physics_data[3]
+            gear = physics_data[4]
+            rpm = physics_data[5]
+            steerAngle = physics_data[6]
+            speedkph = physics_data[7]
+            current_time = graphics_data[3]
+            tyre_coordinates = physics_data[105:117]
+            relevant_data = [current_time, gas, brake, fuel, gear, rpm, steerAngle, speedkph, tyre_coordinates]
+            driving_data.append(relevant_data)
             continue
+        else:
+            with open("data.pkl", "wb") as data_file:
+                pickle.dump(driving_data, data_file)
+            print("Session has ended or you are not in a live session. Please enter a session and re run the program.")
+            break
+
     else:
         try:
             physics_shared_mem.close()
