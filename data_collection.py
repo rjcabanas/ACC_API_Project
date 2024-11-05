@@ -2,8 +2,7 @@
 import mmap
 import struct
 import psutil
-from lap_class import Laps
-import json
+import time
 import pickle
 
 buffer_size_physics = 704
@@ -319,7 +318,7 @@ def lap_finished(graphics_data: tuple) -> bool:
 
 def main():
     driving_data = []
-
+    interval = 0.001
     while game_is_running():
         physics_shared_mem = get_physics_shared_mem()
         graphics_shared_mem = get_graphics_shared_mem()
@@ -331,6 +330,7 @@ def main():
 
         if ongoing_session(graphics_data):
             '''Can convert this section into a function for collecting data'''
+            session_status = graphics_data[1]
             gas = physics_data[1]
             brake = physics_data[2]
             fuel = physics_data[3]
@@ -340,8 +340,9 @@ def main():
             speedkph = physics_data[7]
             current_time = graphics_data[3]
             tyre_coordinates = physics_data[105:117]
-            relevant_data = [current_time, gas, brake, fuel, gear, rpm, steerAngle, speedkph, tyre_coordinates]
+            relevant_data = [session_status, current_time, gas, brake, fuel, gear, rpm, steerAngle, speedkph, tyre_coordinates]
             driving_data.append(relevant_data)
+            time.sleep(interval)
             continue
         else:
             with open("data.pkl", "wb") as data_file:

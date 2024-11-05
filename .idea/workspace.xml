@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5cdfeba2-1119-4748-a655-82231725f581" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datacopy.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_transformation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_collection.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_collection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lap_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/lap_class.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,13 +50,15 @@
   "keyToString": {
     "Python.ACC_launcher.executor": "Run",
     "Python.UDP_listener.executor": "Run",
+    "Python.data_collection.executor": "Run",
+    "Python.data_transformation.executor": "Run",
     "Python.learning_file.executor": "Run",
     "Python.main.executor": "Run",
     "Python.temp.executor": "Run",
     "Python.temp_read_text.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "Merging data__storage",
+    "git-widget-placeholder": "data__storage",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/Python_Projects/ACC_API_Project"
   },
@@ -74,7 +76,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-5b207ade9991-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.17890.14" />
+        <option value="bundled-python-sdk-48aec45f0201-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.17011.127" />
       </set>
     </attachedChunks>
   </component>

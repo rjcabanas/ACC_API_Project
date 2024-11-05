@@ -1,17 +1,15 @@
 
 class Laps:
 
-    def __init__(self, session_details: str, lap_number: int, carModel: str):
-        self.session_details = session_details
-        self.lap_number = lap_number
+    def __init__(self):
+        self.lap_number = int
         self.gas = []
         self.brake = []
         self.fuel = []
         self.gear = []
+        self.rpm = []
         self.steerAngle = []
         self.speed_kph = []
-        self.carDamage = []
-        self.brakeTemp = []
-        self.tyre_coordinates = []
+        self.tyre_coords = []
         self.current_lap_time = []
-        self.carModel = carModel
+        self.car_centroid = []
